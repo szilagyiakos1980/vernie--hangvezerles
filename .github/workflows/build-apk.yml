@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Projekt kicsomagolása
-        run: unzip -q Vernie_hangvezerles_projekt.zip -d extracted
+        run: unzip -q VernieVoice_v0003_2026-09-10_18-11-07_CEST.zip -d extracted
 
       - name: Java 17 beállítása
         uses: actions/setup-java@v4
