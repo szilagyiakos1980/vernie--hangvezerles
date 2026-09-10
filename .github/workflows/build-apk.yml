@@ -1,0 +1,43 @@
+name: Vernie APK készítése
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Forrás letöltése
+        uses: actions/checkout@v4
+
+      - name: Projekt kicsomagolása
+        run: unzip -q Vernie_hangvezerles_projekt.zip -d extracted
+
+      - name: Java 17 beállítása
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Gradle beállítása
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+
+      - name: APK fordítása
+        run: gradle -p extracted/VernieVoice --no-daemon --stacktrace assembleDebug
+
+      - name: APK feltöltése
+        uses: actions/upload-artifact@v4
+        with:
+          name: VernieVoice-debug-apk
+          path: extracted/VernieVoice/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
